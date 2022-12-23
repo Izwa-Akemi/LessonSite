@@ -1,7 +1,10 @@
 package lesson.com.model.entity;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,34 +23,55 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Entity
-@Table(name="lesson")
+@Table(name = "lesson")
 public class LessonEntity {
+
+	public LessonEntity(@NonNull LocalDate startDate, @NonNull LocalTime startTime, @NonNull LocalTime finishTime,
+			@NonNull String lessonName, String lessonDetail, int lessonFee, String imageName,
+			LocalDateTime registerDate) {
+		this.startDate = startDate;
+		this.startTime = startTime;
+		this.finishTime = finishTime;
+		this.lessonName = lessonName;
+		this.lessonDetail = lessonDetail;
+		this.lessonFee = lessonFee;
+		this.imageName = imageName;
+		this.registerDate = registerDate;
+	}
+
 	@Id
-	@Column(name="lesson_id")
+	@Column(name = "lesson_id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long lessonId;
-	
-	@NonNull
-	@Column(name="start_date")
-	private Date startDate;
 
 	@NonNull
-	@Column(name="start_time")
-	private Time startTime;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "start_date")
+	private LocalDate startDate;
 
 	@NonNull
-	@Column(name="lesson_name")
+	@DateTimeFormat(pattern = "HH:mm")
+	@Column(name = "start_time")
+	private LocalTime startTime;
+
+	@NonNull
+	@DateTimeFormat(pattern = "HH:mm")
+	@Column(name = "finish_time")
+	private LocalTime finishTime;
+
+	@NonNull
+	@Column(name = "lesson_name")
 	private String lessonName;
-	
-	@Column(name="lesson_detail")
+
+	@Column(name = "lesson_detail")
 	private String lessonDetail;
-	
-	@Column(name="lesson_fee")
+
+	@Column(name = "lesson_fee")
 	private int lessonFee;
-	
-	@Column(name="image_id")
-	private Long imageId;
-	
-	@Column(name="register_date")
-	private String registerDate;
+
+	@Column(name = "image_name")
+	private String imageName;
+
+	@Column(name = "register_date")
+	private LocalDateTime registerDate;
 }

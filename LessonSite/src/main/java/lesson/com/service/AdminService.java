@@ -1,5 +1,6 @@
 package lesson.com.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,12 +31,13 @@ public class AdminService {
 	
 	//保存処理
 	public boolean createAccount(String adminName,String adminEmail, String adminPassword) {
+		LocalDateTime dateTimeNow = LocalDateTime.now();
 		//AdminRegisterControllerから渡される管理者情報（メールアドレス）を条件にDB検索で検索する
 		AdminEntity adminEntity = adminDao.findByAdminEmail(adminEmail);
 		//AdminRegisterControllerから渡される管理者情報（メール、パスワード）を条件にDB検索で検索した結果
 		//なかった場合には、保存
 		if (adminEntity==null) {
-			adminDao.save(new AdminEntity(adminName,adminEmail, adminPassword));
+			adminDao.save(new AdminEntity(adminName,adminEmail, adminPassword,dateTimeNow));
 			return true;
 		} else {
 			return false;

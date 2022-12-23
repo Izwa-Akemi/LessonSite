@@ -1,6 +1,7 @@
 package lesson.com.model.entity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -42,5 +43,5 @@ public class StudentEntity {
 	private int deleteFlg;
 	
 	@Column(name="register_date")
-	private Timestamp registerDate;
+	private LocalDateTime registerDate;
 }

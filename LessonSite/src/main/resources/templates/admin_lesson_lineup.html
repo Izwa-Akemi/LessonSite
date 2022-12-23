@@ -32,23 +32,11 @@
                <th>価格</th>
                <th>変更</th>
            </tr>
-           <tr>
-               <td></td>
-               <td></td>
-               <td></td>
-               <td><button>変更</button></td>
-           </tr>
-           <tr>
-               <td></td>
-               <td></td>
-               <td></td>
-               <td><button>変更</button></td>
-           </tr>
-           <tr>
-               <td></td>
-               <td></td>
-               <td></td>
-               <td><button>変更</button></td>
+           <tr th:each="lesson:${lessonList}">
+               <td th:text=" ${lesson.lessonId}"></td>
+               <td th:text=" ${lesson.lessonName}"></td>
+               <td th:text=" ${lesson.lessonFee}"></td>
+               <td><button th:attr="onClick='location.href=\''+'/admin/lesson/edit/'+${lesson.lessonId}+'\''">変更</button></td>
            </tr>
        </table>
        <button class="logout">ログアウト</button>

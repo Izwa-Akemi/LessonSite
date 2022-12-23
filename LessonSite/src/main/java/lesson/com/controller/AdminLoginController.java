@@ -37,12 +37,7 @@ public class AdminLoginController {
 		}else {
 			//adminEntityの内容をsessionに保存する
 			session.setAttribute("admin",adminEntity);
-			//現在ログインしている管理者情報を取得する
-			AdminEntity admin = (AdminEntity) session.getAttribute("admin");
-			//現在ログインしている人の名前を取得する
-			String loginAdminName = admin.getAdminName();
-			model.addAttribute("loginAdminName",loginAdminName);
-			return "admin_lesson_lineup.html";
+			return "redirect:/admin/lesson/all";
 		}
 	}
 }

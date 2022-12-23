@@ -1,6 +1,7 @@
 package lesson.com.model.entity;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,11 +22,20 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Table(name="admin")
 public class AdminEntity {
+
+	public AdminEntity(@NonNull String adminName, @NonNull String adminEmail, @NonNull String adminPassword,
+			LocalDateTime registerDate) {
+		this.adminName = adminName;
+		this.adminEmail = adminEmail;
+		this.adminPassword = adminPassword;
+		this.registerDate = registerDate;
+	}
+	
 	@Id
 	@Column(name="admin_id")
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long adminId;
-	
+
 	@NonNull
 	@Column(name="admin_name")
 	private String adminName;
@@ -37,10 +47,12 @@ public class AdminEntity {
 	@NonNull
 	@Column(name="admin_password")
 	private String adminPassword;
-	
+
 	@Column(name="delete_flg")
 	private int deleteFlg;
-	
+
 	@Column(name="register_date")
-	private Timestamp registerDate;
+	private LocalDateTime registerDate;
+
+
 }
