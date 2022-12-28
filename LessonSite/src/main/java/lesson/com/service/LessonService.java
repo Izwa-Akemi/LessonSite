@@ -23,7 +23,7 @@ public class LessonService {
 		lessonDao.save(new LessonEntity(startDate, startTime, finishTime, lessonName, lessonDetail, lessonFee,
 				imageName, dateTimeNow));
 	}
-
+    //一覧を取得
 	public List<LessonEntity> findAllLesson() {
 		return lessonDao.findAll();
 	}

@@ -27,7 +27,7 @@ import lesson.com.service.LessonService;
 
 @Controller
 @RequestMapping("/admin/lesson")
-public class LessonController {
+public class AdminLessonController {
 	@Autowired
 	LessonService lessonService;
 	@Autowired
