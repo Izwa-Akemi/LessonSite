@@ -26,29 +26,21 @@
             <li>申し込み完了</li>
        </ul>
        <ul class="apply">
-           <li>
-               <img src="./img/lecture1_small.jpg" alt="lecture1">
+           <li th:each="lesson:${list}">
+               <img th:src="@{/lesson-image/{items}(items=${lesson.imageName})}">
                <div class="apply_p">
-                    <p>4/22(木)17:00-20:00</p>
-                    <h3>Java/MySQLでログインページを作りながら学ぶWeb開発</h3>
-                    <p id="apply_price1">11,000円(税込)</p>    
+                     <p th:text="${#temporals.format(lesson.startDate, 'yyyy/MM/dd')}+'('+${#temporals.dayOfWeekName(lesson.startDate)}+')'+${#temporals.format(lesson.startTime, 'HH:mm')}+'-'+${#temporals.format(lesson.finishTime, 'HH:mm')}"></p>
+                    <h3 th:text="${lesson.lessonName}"></h3>
+                    <p id="apply_price1" th:text="${lesson.lessonFee +'円(税込)'}"></p>    
                 </div>    
-           </li>
-           <li>
-                <img src="./img/lecture2_small.jpg" alt="lecture2">
-                <div class="apply_p">
-                    <p>4/22(木)17:00-20:00</p>
-                    <h3>Java/MySQLでログインページを作りながら学ぶWeb開発</h3>
-                    <p id="apply_price2">11,000円(税込)</p>     
-                </div>   
            </li>
        </ul>
        <div class="pay_2">
            <p id="method">お支払い方法</p>
-           <p id="selection">当日現金支払い</p>
+           <p id="selection" th:text="${payMethod}"></p>
        </div>
        <button class="apply_2_back">&lsaquo;&lsaquo;&nbsp;&nbsp;戻る</button>
-       <button class="apply_2_decide">申し込み内容確定</button>
+       <button class="apply_2_decide" onclick="location.href='/lesson/complete'">申し込み内容確定</button>
    </article>
    <footer><small>Copyright &copy; Academy All rights reserved.</small></footer>
 </body>

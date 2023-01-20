@@ -42,7 +42,7 @@ public class StudentLoginController {
 			//現在ログインしている人の名前を取得する
 			String loginStudentName =student.getStudentName();
 			model.addAttribute("loginStudentName",loginStudentName);
-			return "user_menu.html";
+			return "redirect:/lesson/show/cart";
 		}
 	}
 }
