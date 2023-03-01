@@ -14,12 +14,17 @@
 </head>
 
 <body>
-	<header>
-		<div>
-			<h1><img src="img/Akros_logo.svg" alt=""></h1>
-			<p>ID:suzuki-ac.jp</p>
-		</div>
-	</header>
+	  <header>
+        <div th:if="${loginFlg}">
+             <h1><img th:src="@{/img/logo.png}"></h1>
+             <p id="mypage"><a th:href="@{/lesson/mypage}">マイページ</a></p>
+             <p id="user_register_6" style="color: white;" th:text="${userName}"></p>   
+        </div>
+         <div th:if="${!loginFlg}">
+             <h1><img th:src="@{/img/logo.png}"></h1>
+             <p id="mypage"><a th:href="@{/lesson/mypage}">マイページ</a></p>   
+        </div>
+    </header>
 	<article>
 		<h2>申し込み手続き</h2>
 		<ul class="flow">

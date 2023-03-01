@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.http.HttpSession;
+import lesson.com.model.entity.AdminAndLessonEntity;
 import lesson.com.model.entity.AdminEntity;
 import lesson.com.model.entity.LessonEntity;
 import lesson.com.service.LessonService;
@@ -43,7 +44,7 @@ public class AdminLessonController {
 			@RequestParam(name = "finishTime") @DateTimeFormat(iso = DateTimeFormat.ISO.TIME) LocalTime finishTime,
 			@RequestParam String lessonName,
 			@RequestParam String lessonDetail,
-			@RequestParam int lessonFee, 
+			@RequestParam int lessonFee,
 			@RequestParam("imageName") MultipartFile imageName) {
 		//画像ファイル名を取得する
 		String fileName = imageName.getOriginalFilename();
@@ -62,7 +63,9 @@ public class AdminLessonController {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		lessonService.createLesson(startDate, startTime,finishTime, lessonName, lessonDetail, lessonFee,fileName);			
+		AdminEntity admin = (AdminEntity) session.getAttribute("admin");
+		Long adminId = admin.getAdminId();
+		lessonService.createLesson(startDate, startTime,finishTime, lessonName, lessonDetail, lessonFee,fileName,adminId);			
 		return "admin_fix_register.html";
 	}
 	
@@ -72,7 +75,7 @@ public class AdminLessonController {
 		AdminEntity admin = (AdminEntity) session.getAttribute("admin");
 		//現在ログインしている人の名前を取得する
 		String loginAdminName = admin.getAdminName();
-		List<LessonEntity>lessonList = lessonService.findAllLesson();
+		List<AdminAndLessonEntity>lessonList = lessonService.findAllLesson(admin.getAdminId());
 		model.addAttribute("loginAdminName",loginAdminName);
 		model.addAttribute("lessonList", lessonList);
 		return "admin_lesson_lineup.html";
@@ -99,8 +102,9 @@ public class AdminLessonController {
 			@RequestParam int lessonFee,
 			@RequestParam String imageName,
 			Model model) {
-		
-		lessonService.updateLesson(lessonId, startDate, startTime, finishTime, lessonName, lessonDetail, lessonFee,imageName);
+		AdminEntity admin = (AdminEntity) session.getAttribute("admin");
+		Long adminId = admin.getAdminId();
+		lessonService.updateLesson(lessonId, startDate, startTime, finishTime, lessonName, lessonDetail, lessonFee,imageName,adminId);
 		model.addAttribute("lessonId",lessonId);
 		return "admin_fix_edit.html";
 	}
@@ -142,7 +146,9 @@ public class AdminLessonController {
 		}catch(Exception e) {
 			e.printStackTrace();
 		}
-		lessonService.updateLesson(lessonId, startDate, startTime, finishTime, lessonName, lessonDetail, lessonFee,fileName);
+		AdminEntity admin = (AdminEntity) session.getAttribute("admin");
+		Long adminId = admin.getAdminId();
+		lessonService.updateLesson(lessonId, startDate, startTime, finishTime, lessonName, lessonDetail, lessonFee,fileName,adminId);
 		model.addAttribute("lessonId",lessonId);
 		return "admin_fix_edit.html";
 	}
@@ -152,7 +158,7 @@ public class AdminLessonController {
 		AdminEntity admin = (AdminEntity) session.getAttribute("admin");
 		//現在ログインしている人の名前を取得する
 		String loginAdminName = admin.getAdminName();
-		List<LessonEntity>lessonList = lessonService.findAllLesson();
+		List<AdminAndLessonEntity>lessonList = lessonService.findAllLesson(admin.getAdminId());
 		model.addAttribute("loginAdminName",loginAdminName);
 		model.addAttribute("lessonList", lessonList);
 		return "admin_delete_lesson.html";

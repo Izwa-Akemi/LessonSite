@@ -40,4 +40,11 @@ public class StudentService {
 				return false;
 			}
 		}
+		
+		//update処理
+		public void updateAccount(String userEmail,String password) {
+			StudentEntity studentEntity = studentDao.findByStudentEmail(userEmail);
+			studentEntity.setStudentPassword(password);
+			studentDao.save(studentEntity);
+		}
 }

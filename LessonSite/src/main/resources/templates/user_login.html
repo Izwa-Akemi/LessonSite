@@ -45,10 +45,10 @@
                     </td>
                 </tr>
                 <tr>
-                    <th id="user_help">※パスワードを忘れた方は<a href="">こちら</a></th>
+                    <th id="user_help">※パスワードを忘れた方は<a th:href="@{/user/password/reset}">こちら</a></th>
                 </tr>
             </table>
-            <button class="user_login_btn">新規登録はこちら&nbsp;&nbsp;&nbsp;&rsaquo;&rsaquo;</button>
+            <button type="button" class="user_login_btn" onclick="location.href='/user/register'">新規登録はこちら&nbsp;&nbsp;&nbsp;&rsaquo;&rsaquo;</button>
         </form>
     </article>
     <footer><small>Copyright &copy;Academy All rights reserved.</small></footer>

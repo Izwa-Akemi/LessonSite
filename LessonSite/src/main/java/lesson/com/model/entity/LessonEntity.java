@@ -28,7 +28,7 @@ public class LessonEntity {
 
 	public LessonEntity(@NonNull LocalDate startDate, @NonNull LocalTime startTime, @NonNull LocalTime finishTime,
 			@NonNull String lessonName, String lessonDetail, int lessonFee, String imageName,
-			LocalDateTime registerDate) {
+			LocalDateTime registerDate,Long adminId) {
 		this.startDate = startDate;
 		this.startTime = startTime;
 		this.finishTime = finishTime;
@@ -37,7 +37,11 @@ public class LessonEntity {
 		this.lessonFee = lessonFee;
 		this.imageName = imageName;
 		this.registerDate = registerDate;
+		this.adminId = adminId;
 	}
+	
+	
+
 
 	@Id
 	@Column(name = "lesson_id")
@@ -71,6 +75,9 @@ public class LessonEntity {
 
 	@Column(name = "image_name")
 	private String imageName;
+	
+	@Column(name="admin_id")
+	private Long adminId;
 
 	@Column(name = "register_date")
 	private LocalDateTime registerDate;

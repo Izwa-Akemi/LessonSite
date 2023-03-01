@@ -33,7 +33,10 @@
 						</td>
 					</tr>
 				</table>
-				<button id="change_btn">変更</button>
+				<div class="change-button">
+					<button id="return_btn" type="button" onclick="history.back();">戻る</button>
+					<button id="change_btn">変更</button>
+				</div>
 				<input type="hidden" name="startDate" th:value="${lessonList.startDate}">
 				<input type="hidden" name="startTime" th:value="${lessonList.startTime}">
 				<input type="hidden" name="finishTime" th:value="${lessonList.finishTime}">

@@ -3,6 +3,7 @@ package lesson.com.service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,10 @@ public class TransactoinHistoryService {
 		}
 		public TransactionHistoryEntity getTransactoinId(Long studentId) {
 			return transactionHistoryDao.findByStudentId(studentId);
+		}
+		
+		public List<TransactionHistoryEntity> deleteTransactoinId(Long transactionId) {
+			return transactionHistoryDao.deleteByTransactionId(transactionId);
 		}
 
 }

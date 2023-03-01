@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import jakarta.servlet.http.HttpSession;
 import lesson.com.model.entity.AdminEntity;
@@ -39,5 +40,12 @@ public class AdminLoginController {
 			session.setAttribute("admin",adminEntity);
 			return "redirect:/admin/lesson/all";
 		}
+	}
+	
+	@GetMapping("/logout")
+	public String adminLogout() {
+		
+		session.invalidate();
+		return "redirect:/admin/login";
 	}
 }

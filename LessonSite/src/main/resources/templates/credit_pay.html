@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Stripe checkout.jsの動作確認</title>
+     <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+<div class="product" th:each="item:${lineItems}">
+        <div class="description">
+          <h3 th:text="${item.name}"></h3>
+          <h5 th:text="${item.price}"></h5>
+        </div>
+      </div>
+     
+<form action="/lesson/pay" method="POST">
+  <script th:inline="javascript"
+    src="https://checkout.stripe.com/checkout.js"
+    class="stripe-button"
+    data-key="pk_test_51K0KmoGyEksY9WnlGR386CRIGUtqosOClvEtLO1D8T4L5YpwCVu6k7nlciAt4CS7Ydf4INYoTx7n0Yx5Igo33XUj00PGNqaTUV"
+    th:data-amount="${amount}"
+    data-currency="jpy">
+  </script>
+</form>
+</body>
+</html>

@@ -44,4 +44,11 @@ public class StudentEntity {
 	
 	@Column(name="register_date")
 	private LocalDateTime registerDate;
+
+	public StudentEntity(Long studentId, @NonNull String studentPassword) {
+		this.studentId = studentId;
+		this.studentPassword = studentPassword;
+	}
+	
+	
 }

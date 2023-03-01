@@ -12,15 +12,20 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-   <header>
-       <div>
-            <h1><img src="" alt=""></h1>
-            <p id="user_confirm">ID:suzukiac.jp</p>   
-       </div>
-   </header>
+  <header>
+        <div th:if="${loginFlg}">
+             <h1><img th:src="@{/img/logo.png}"></h1>
+             <p id="mypage"><a th:href="@{/lesson/mypage}">マイページ</a></p>
+             <p id="user_register_6" style="color: white;" th:text="${userName}"></p>   
+        </div>
+         <div th:if="${!loginFlg}">
+             <h1><img th:src="@{/img/logo.png}"></h1>
+             <p id="mypage"><a th:href="@{/lesson/mypage}">マイページ</a></p>   
+        </div>
+    </header>
    <article>
        <h2>申し込み予定講座</h2>
-           <button class="con_btn">申し込み予定講座</button>
+           <button class="con_btn" onclick="location.href='/lesson/menu'">メニュー一覧</button>
        <ul class="con">
            <li th:each="lesson:${list}">
                <img th:src="@{/lesson-image/{items}(items=${lesson.imageName})}">
@@ -32,7 +37,7 @@
                 <button th:attr="onClick='location.href=\''+'/lesson/cart/delete/'+${lesson.lessonId}+'\''">削除</button>  
            </li>
        </ul>
-       <a th:href="@{/lesson/request}">購入</a>
+       <button class="apply_btn" onclick="location.href='/lesson/request'">購入</button>
    </article>
    <footer><small>Copyright &copy;  Academy All rights reserved.</small></footer>
 </body>

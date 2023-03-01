@@ -24,8 +24,10 @@
 		<h2>登録講座内容の変更</h2>
 		<div class="change">
 			<img th:src="@{/lesson-image/{items}(items=${lessonList.imageName})}">
-			<button
-				th:attr="onClick='location.href=\''+'/admin/lesson/image/edit/'+${lessonList.lessonId}+'\''">画像を変更</button>
+			<div class="change-button">
+				<button
+					th:attr="onClick='location.href=\''+'/admin/lesson/image/edit/'+${lessonList.lessonId}+'\''">画像を変更</button>
+			</div>
 			<form th:action="@{/admin/lesson/edit/update}" method="post">
 				　　　　　　<table class="change_table">
 					<tr>
@@ -68,7 +70,10 @@
 				</table>
 				<input type="hidden" name="lessonId" th:value="${lessonList.lessonId}">
 				<input type="hidden" name="imageName" th:value="${lessonList.imageName}">
-				<button id="change_btn">変更</button>
+				<div class="change-button">
+					<button id="return_btn" type="button" onclick="history.back();">戻る</button>
+					<button id="change_btn">変更</button>
+				</div>
 			</form>
 			　　　　
 		</div>

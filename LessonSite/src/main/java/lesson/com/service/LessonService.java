@@ -10,25 +10,30 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lesson.com.model.dao.AdminAndLessonDao;
 import lesson.com.model.dao.LessonDao;
+import lesson.com.model.entity.AdminAndLessonEntity;
 import lesson.com.model.entity.LessonEntity;
 
 @Service
 public class LessonService {
 	@Autowired
 	private LessonDao lessonDao;
+	
+	@Autowired
+	private AdminAndLessonDao adminAndlessonDao;
 
 	// 保存処理
 	public void createLesson(LocalDate startDate, LocalTime startTime, LocalTime finishTime, String lessonName,
-			String lessonDetail, int lessonFee, String imageName) {
+			String lessonDetail, int lessonFee, String imageName,Long adminId) {
 		LocalDateTime dateTimeNow = LocalDateTime.now();
 		lessonDao.save(new LessonEntity(startDate, startTime, finishTime, lessonName, lessonDetail, lessonFee,
-				imageName, dateTimeNow));
+				imageName,dateTimeNow,adminId));
 	}
 
 	// 一覧を取得
-	public List<LessonEntity> findAllLesson() {
-		return lessonDao.findAll();
+	public List<AdminAndLessonEntity> findAllLesson(Long adminId) {
+		return adminAndlessonDao.findLessonAll(adminId);
 	}
 
 	// 生徒側一覧表示
@@ -57,10 +62,10 @@ public class LessonService {
 	}
 
 	public void updateLesson(Long lessonId, LocalDate startDate, LocalTime startTime, LocalTime finishTime,
-			String lessonName, String lessonDetail, int lessonFee, String imageName) {
+			String lessonName, String lessonDetail, int lessonFee, String imageName,Long adminId) {
 		LocalDateTime dateTimeNow = LocalDateTime.now();
 		lessonDao.save(new LessonEntity(lessonId, startDate, startTime, finishTime, lessonName, lessonDetail, lessonFee,
-				imageName, dateTimeNow));
+				imageName,adminId,dateTimeNow));
 	}
 
 // 削除

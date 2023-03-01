@@ -27,7 +27,8 @@ h1 {
 
 header p {
     float: right;
-    width: 400px;
+    /* width: 400px; */
+    padding-left: 20px;
     height: 48px;
     line-height: 48px;
     font-size: 14px;
@@ -292,7 +293,7 @@ table, tr, th, td {
 }
 
 .change button {
-    margin-left: 465px;
+    /*margin-left: 465px;*/
     width: 158px;
     height: 50px;
     line-height: 50px;
@@ -426,7 +427,7 @@ table, tr, th, td {
 }
 
 .add button {
-    margin-left: 465px;
+    /*margin-left: 465px;*/
     width: 158px;
     height: 50px;
     line-height: 50px;
@@ -874,7 +875,8 @@ table, tr, th, td {
 
 /*user_register_6 */
 #user_register_6 {
-    display: none;
+  /*   display: none; */
+  float: right;
 }
 
 .register_6 {
@@ -882,6 +884,7 @@ table, tr, th, td {
     background-color: #D6EEE1;
     padding-top: 40px;
     padding-bottom: 15px;
+     color:#fff;
 }
 
 .register_6 p {
@@ -889,6 +892,7 @@ table, tr, th, td {
     line-height: 23px;
     text-align: center;
     margin-bottom: 40px;
+    color:#fff;
 }
 
 .register_6 button {
@@ -1232,7 +1236,7 @@ table, tr, th, td {
     margin-left: 71px;
 }
 
-.apply_2_decide {
+.apply_2_decide { 
     display: block;
     width: 280px;
     height: 50px;
@@ -1240,7 +1244,15 @@ table, tr, th, td {
     font-size: 18px;
     border-radius: 25px;
     background-color: #F59923;
-    margin: 0 auto 30px;
+    margin-left: 30px;
+}
+.stripe-button-el{
+    margin-left: 30px;
+}
+.apply-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 /* apply_3 */
@@ -1305,3 +1317,8 @@ table, tr, th, td {
 }
 
 /*user_detail*/
+#mypage {
+    color:#fff;
+
+}
+
