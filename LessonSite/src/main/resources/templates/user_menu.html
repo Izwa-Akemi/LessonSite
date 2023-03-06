@@ -18,12 +18,14 @@
         <div th:if="${loginFlg}">
              <h1><img th:src="@{/img/logo.png}"></h1>
              <p id="mypage"><a th:href="@{/lesson/mypage}">マイページ</a></p>
+              <p style="color: white;"><a th:href="@{/lesson/show/cart}">カート一覧</a></p> 
              <p id="user_register_6" style="color: white;" th:text="${userName}"></p> 
              <p style="color: white;"><a th:href="@{/user/logout}">ログアウト</a></p> 
         </div>
          <div th:if="${!loginFlg}">
              <h1><img th:src="@{/img/logo.png}"></h1>
-             <p id="mypage"><a th:href="@{/lesson/mypage}">マイページ</a></p>  
+             <p id="mypage"><a th:href="@{/lesson/mypage}">マイページ</a></p> 
+              <p id="mypage"><a th:href="@{/user/login}">ログイン</a></p>  
              <p th:text=${logoutMessage} style="color: white;"></p> 
         </div>
     </header>

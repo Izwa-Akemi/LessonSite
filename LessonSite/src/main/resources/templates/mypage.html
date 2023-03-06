@@ -27,7 +27,7 @@
 	</header>
 	<article>
 		<h2>申込完了講座一覧</h2>
-		<button class="menu_btn">メニュー一覧へ</button>
+		<button class="menu_btn" onclick="location.href='/lesson/menu'">メニュー一覧へ</button>
 		<ul class="menu menu2">
 			<li th:each="lesson:${listSub}"><a th:href="@{/lesson/detail/{lessonId}(lessonId=${lesson.lessonId})}">
 					<img th:src="@{/lesson-image/{items}(items=${lesson.imageName})}">

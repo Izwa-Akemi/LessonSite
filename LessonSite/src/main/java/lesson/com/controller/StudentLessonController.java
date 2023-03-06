@@ -32,45 +32,102 @@ import lesson.com.model.entity.StudentEntity;
 import lesson.com.model.entity.SubscriptionEntity;
 import lesson.com.model.entity.TransactionHistoryEntity;
 import lesson.com.service.LessonService;
+import lesson.com.service.SubscriptionService;
 import lesson.com.service.TransactoinHistoryService;
 import lesson.com.service.TransactoinItemService;
 
 @Controller
 @RequestMapping("/lesson")
 public class StudentLessonController {
+	/**
+	 * 講座テーブルにアクセスして操作するため、LessonServiceクラス を使えるようにしておきます。
+	 */
 	@Autowired
 	LessonService lessonService;
+	/**
+	 * lesson,student,支払い情報をセッションから取得するために、 HttpSessionを取得可能にしておきます。
+	 */
 	@Autowired
 	HttpSession session;
+	/**
+	 * 購入履歴テーブルにアクセスして操作するため、TransactoinHistoryServiceクラス を使えるようにしておきます。
+	 */
 	@Autowired
 	TransactoinHistoryService transactoinHistoryService;
+	/**
+	 * 購入講座情報テーブルにアクセスして操作するため、TransactoinItemServiceクラス を使えるようにしておきます。
+	 */
 	@Autowired
 	TransactoinItemService transactoinItemService;
+	/**
+	 * メール送信用クラス
+	 */
 	@Autowired
 	MailSender mailSender;
-
+	/**
+	 * ユーザーが購入した商品一覧テーブルにアクセスして操作するため、SubscriptionServiceクラスを使えるようにしておきます。
+	 */
 	@Autowired
-	SubscriptionDao subscriptionDao;
-
+	SubscriptionService subscriptionService;
+	/**
+	 * メニュー画面の表示処理
+	 */
 	@GetMapping("/menu")
 	public String getLessonMenuPage(Model model) {
+		/**
+		 * lessonテーブルから全ての講座情報を取得する
+		 */
 		List<LessonEntity> lessonList = lessonService.findActiveAllLesson();
+		/**
+		 * modelへ、lessonテーブルから取得した情報をセットする。
+		 */
 		model.addAttribute("lessonList", lessonList);
+		/**
+		 * modelへ、loginCheckメソッドから取得した情報をセットする。
+		 */
 		model.addAttribute("loginFlg", loginCheck());
+		/**
+		 * modelへ、loginUserNameメソッドから取得した情報をセットする。
+		 */
 		model.addAttribute("userName", loginUserName());
 		return "user_menu.html";
 	}
+
+	/**
+	 * ログアウトの処理
+	 */
 	@GetMapping("/menu/logout")
 	public String getLessonLogoutMenuPage(Model model) {
+		/**
+		 * lessonテーブルから全ての講座情報を取得する
+		 */
 		List<LessonEntity> lessonList = lessonService.findActiveAllLesson();
+		/**
+		 * modelへ、lessonテーブルから取得した情報をセットする。
+		 */
 		model.addAttribute("lessonList", lessonList);
+		/**
+		 * modelへ、ログアウト処理のため、ログインフラグにfalseをセットする。
+		 */
 		model.addAttribute("loginFlg", false);
+		/**
+		 * modelへ、ログアウト処理のため ログインしているユーザー情報にnullをセットする。
+		 */
 		model.addAttribute("userName", null);
-		model.addAttribute("logoutMessage","ログアウトしました");
+		/**
+		 * modelへ、ログアウト処理が正常に完了したことを知らせるメッセージをセットする。
+		 */
+		model.addAttribute("logoutMessage", "ログアウトしました");
 		return "user_menu.html";
 	}
-	
-
+	/**
+	 * 商品詳細の表示処理
+	 */
+	/**
+	 * @param lessonId　講座Id
+	 * @param model
+	 * @return user_lesson_detail.html　講座情報詳細画面
+	 */
 	@GetMapping("/detail/{lessonId}")
 	public String getLessonDetailPage(@PathVariable Long lessonId, Model model) {
 		LessonEntity lesson = lessonService.findByLessonId(lessonId);
@@ -111,19 +168,27 @@ public class StudentLessonController {
 			return null;
 		}
 	}
+	
+	//ログインページに飛ばすメソッド
+	public String login(String templete) {
+		session.setAttribute("goLogin", templete);
+		return "redirect:/user/login";
+	}
 
 	@GetMapping("/mypage")
 	public String getMypage(Model model) {
 		if (session.getAttribute("student") == null) {
-			return "redirect:/user/login";
+			return login("/lesson/mypage");
+		}else {
+			StudentEntity student = (StudentEntity) session.getAttribute("student");
+			Long studentId = student.getStudentId();
+			List<SubscriptionEntity> listSub = subscriptionService.getPurchaseHistory(studentId);
+			model.addAttribute("listSub", listSub);
+			model.addAttribute("loginFlg", loginCheck());
+			model.addAttribute("userName", student.getStudentName());
+			return "mypage.html";
 		}
-		StudentEntity student = (StudentEntity) session.getAttribute("student");
-		Long studentId = student.getStudentId();
-		List<SubscriptionEntity> listSub = subscriptionDao.findByStudentId(studentId);
-		model.addAttribute("listSub", listSub);
-		model.addAttribute("loginFlg", loginCheck());
-		model.addAttribute("userName", student.getStudentName());
-		return "mypage.html";
+				
 	}
 
 	@PostMapping("/cart/all")
@@ -135,12 +200,13 @@ public class StudentLessonController {
 			list.add(lessons);
 			session.setAttribute("cart", list);
 			if (session.getAttribute("student") == null) {
-				return "redirect:/user/login";
-			}
+				return login("/lesson/show/cart");
+			}else {
 			model.addAttribute("list", list);
 			model.addAttribute("loginFlg", loginCheck());
 			model.addAttribute("userName", loginUserName());
 			return "user_planned_application.html";
+			}
 		} else {
 
 			LinkedList<LessonEntity> list = (LinkedList<LessonEntity>) session.getAttribute("cart");
@@ -264,22 +330,37 @@ public class StudentLessonController {
 		}
 		LinkedList<LessonEntity> list2 = (LinkedList<LessonEntity>) session.getAttribute("cart");
 		Iterator<LessonEntity> ite3 = list2.iterator();
-		List<Object> lineItems = new ArrayList<>();
+		//List<Object> lineItems = new ArrayList<>();
+		StringBuilder message = new StringBuilder();
 		while (ite3.hasNext()) {
 			LessonEntity entity = ite3.next();
-			Map<String, Object> params = new HashMap<>();
-			params.put("price", entity.getLessonFee());
-			params.put("quantity", 1);
-			params.put("name", entity.getLessonName());
-			params.put("description", entity.getLessonDetail());
-			lineItems.add(params);
+//			Map<String, Object> params = new HashMap<>();
+//			params.put("price", entity.getLessonFee());
+//			params.put("quantity", 1);
+//			params.put("name", entity.getLessonName());
+//			params.put("description", entity.getLessonDetail());
+//			lineItems.add(params);
+			message.append("商品名:" + entity.getLessonName() + "" + "値段:" + entity.getLessonFee() + "円\n");
+
 		}
 		session.setAttribute("total", total);
+		session.getAttribute("payment");
 		SimpleMailMessage msg = new SimpleMailMessage();
-		msg.setFrom("a.izawa@rootcox.sakura.ne.jp"); // 送信元メールアドレス
-		msg.setTo(student.getStudentEmail()); // 送信先メールアドレス
-		msg.setSubject("購入ありがとう"); // タイトル
-		msg.setText("テスト本文\r\n改行します。"); // 本文
+		if (session.getAttribute("payment").equals("当日現金支払い")) {
+			msg.setFrom("a.izawa@rootcox.sakura.ne.jp"); // 送信元メールアドレス
+			msg.setTo(student.getStudentEmail()); // 送信先メールアドレス
+			msg.setSubject("ご購入ありがとうございます。"); // タイトル
+			msg.setText("購入商品詳細となります。\r\n" + "ご確認何卒宜しくお願い致します。\r\n" + "支払い方法:当日現金払い\n" + message.toString() + "\n"
+					+ "合計金額" + total + "円"); // 本文
+		}
+		if (session.getAttribute("payment").equals("事前銀行振込")) {
+			msg.setFrom("a.izawa@rootcox.sakura.ne.jp"); // 送信元メールアドレス
+			msg.setTo(student.getStudentEmail()); // 送信先メールアドレス
+			msg.setSubject("ご購入ありがとうございます。"); // タイトル
+			msg.setText("購入商品詳細となります。\r\n" + "ご確認何卒宜しくお願い致します。\r\n" + "支払い方法:事前銀行振込\n" + message.toString() + "\n"
+					+ "合計金額" + total + "円\n" + "下記口座に1週間以内に振り込みをお願い申し上げます。\n" + "口座情報：テスト銀行\n" + "支店名：東京支店\n"
+					+ "口座番号:1234567812"); // 本文
+		}
 
 		try {
 			mailSender.send(msg);
@@ -297,7 +378,7 @@ public class StudentLessonController {
 
 	@PostMapping("/pay")
 	public String getPayment(@RequestParam("stripeToken") String stripeToken,
-			@RequestParam("stripeTokenType") String stripeTokenType, @RequestParam("stripeEmail") String stripeEmaill) {
+			@RequestParam("stripeTokenType") String stripeTokenType, @RequestParam("stripeEmail") String stripeEmaill,Model model) {
 		Stripe.apiKey = "sk_test_51K0KmoGyEksY9WnlVbMRq7SxWsXPtanyBfnL8X7qty6p0WUgyNdGCYSw8ZeHL3oY9WKsWcEAaq4Hl0aUrzd7cE0x00hPCBQ4kl";
 
 		Map<String, Object> chargeMap = new HashMap<String, Object>();
@@ -321,24 +402,42 @@ public class StudentLessonController {
 				.getTransactoinId(student.getStudentId());
 		// transactoin_itemに保存
 		Iterator<LessonEntity> ite2 = list.iterator();
+
+		StringBuilder message = new StringBuilder();
 		while (ite2.hasNext()) {
 			LessonEntity entity = ite2.next();
 			transactoinItemService.createTransactoinHistory(latestTransactions.getTransactionId(),
 					entity.getLessonId());
+			message.append("商品名:" + entity.getLessonName() + "" + "値段:" + entity.getLessonFee() + "円\n");
 		}
+
 		ResponseEntity.ok().build();
+		SimpleMailMessage msg = new SimpleMailMessage();
+
+		msg.setFrom("a.izawa@rootcox.sakura.ne.jp"); // 送信元メールアドレス
+		msg.setTo(student.getStudentEmail()); // 送信先メールアドレス
+		msg.setSubject("ご購入ありがとうございます。"); // タイトル
+		msg.setText("購入商品詳細となります。\r\n" + "ご確認何卒宜しくお願い致します。\r\n" + "支払い方法:クレジットカード決済\n" + message.toString() + "\n"
+				+ "合計金額" + (int) session.getAttribute("total") + "円"); // 本文
+		try {
+			mailSender.send(msg);
+		} catch (MailException e) {
+			e.printStackTrace();
+		}
 		session.removeAttribute("cart");
 		session.removeAttribute("payment");
 		session.removeAttribute("total");
+		model.addAttribute("loginFlg", loginCheck());
+		model.addAttribute("userName", loginUserName());
 		return "user_apply_complete.html";
 
 	}
+
 	@PostMapping("/history/delete")
 	public String delete(@RequestParam Long transactionId) {
 		transactoinItemService.deleteTransactoinId(transactionId);
 		transactoinHistoryService.deleteTransactoinId(transactionId);
 		return "redirect:/lesson/mypage";
 	}
-	
-	
+
 }

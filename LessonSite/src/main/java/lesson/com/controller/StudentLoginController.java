@@ -58,7 +58,13 @@ public class StudentLoginController {
 			//現在ログインしている人の名前を取得する
 			String loginStudentName =student.getStudentName();
 			model.addAttribute("loginStudentName",loginStudentName);
-			return "redirect:/lesson/show/cart";
+			String url = (String) session.getAttribute("goLogin");
+			if(url == null) {
+				return "redirect:/lesson/menu";
+			}else {
+				return "redirect:"+url;
+			}
+			
 		}
 	}
 	@GetMapping("/password/reset")
