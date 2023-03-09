@@ -379,7 +379,7 @@ public class StudentLessonController {
 	@PostMapping("/pay")
 	public String getPayment(@RequestParam("stripeToken") String stripeToken,
 			@RequestParam("stripeTokenType") String stripeTokenType, @RequestParam("stripeEmail") String stripeEmaill,Model model) {
-		Stripe.apiKey = "sk_test_51K0KmoGyEksY9WnlVbMRq7SxWsXPtanyBfnL8X7qty6p0WUgyNdGCYSw8ZeHL3oY9WKsWcEAaq4Hl0aUrzd7cE0x00hPCBQ4kl";
+		Stripe.apiKey = "";
 
 		Map<String, Object> chargeMap = new HashMap<String, Object>();
 		chargeMap.put("amount", session.getAttribute("total"));
